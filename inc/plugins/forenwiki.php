@@ -1497,7 +1497,7 @@ function forenwiki_misc()
     // Unsere Wikieinträge
 
     // Erstmal eine neue "main" Seite erstellen
-    $wikientry = isset($mybb->input['wikientry']);
+    $wikientry = $mybb->input['wikientry'];
     if ($wikientry) {
         // wir holen uns mal die Infos
         $wid = 0;
