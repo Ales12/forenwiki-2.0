@@ -921,13 +921,13 @@ function forenwiki_manage_forenwiki()
             $form_container->output_row(
                 $lang->forenwiki_addcat . "<em>*</em>",
                 $lang->forenwiki_addcat_desc,
-                $form->generate_text_box('category', $mybb->input['category'])
+                $form->generate_text_box('category', isset($mybb->input['category']))
             );
 
             $form_container->output_row(
                 $lang->forenwiki_addsort . "<em>*</em>", //Aktueller Stop?
                 $lang->forenwiki_addsort_desc,
-                $form->generate_numeric_field('catsort', $mybb->get_input('catsort'))
+                $form->generate_numeric_field('catsort', isset($mybb->input['catsort']))
             );
 
             $form_container->end();
@@ -1164,7 +1164,7 @@ function forenwiki_manage_forenwiki()
 
             $form_container->output_row(
                 $lang->forenwiki_wikititle . " <em>*</em>",
-                $form->generate_text_box('wikititle', $mybb->input['wikititle'])
+                $form->generate_text_box('wikititle', isset($mybb->input['wikititle']))
             );
             $query = $db->write_query("SELECT * FROM `" . TABLE_PREFIX . "wiki_categories`");
             $options = array();
@@ -1184,18 +1184,18 @@ function forenwiki_manage_forenwiki()
             $form_container->output_row(
                 $lang->forenwiki_wikilink_title . " <em>*</em>",
                 $lang->forenwiki_wikilink_title_desc,
-                $form->generate_text_box('wikilinktitle', $mybb->input['wikilinktitle'])
+                $form->generate_text_box('wikilinktitle', isset($mybb->input['wikilinktitle']))
             );
 
             $form_container->output_row(
                 $lang->forenwiki_wikilink . " <em>*</em>",
                 $lang->forenwiki_wikilink_desc,
-                $form->generate_text_box('wikilink', $mybb->input['wikilink'])
+                $form->generate_text_box('wikilink', isset($mybb->input['wikilink']))
             );
 
             $text_editor = $form->generate_text_area(
                 'wikitext',
-                $mybb->input['wikitext'],
+                isset($mybb->input['wikitext']),
                 array(
                     'id' => 'wikitext',
                     'rows' => '25',
