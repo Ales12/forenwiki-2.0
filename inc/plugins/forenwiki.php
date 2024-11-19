@@ -395,9 +395,10 @@ function forenwiki_install()
 
     $insert_array = array(
         'title' => 'forenwiki_nav',
-        'template' => $db->escape_string('<td class="trow1" width="20%" valign="top">
+        'template' => $db->escape_string('<<td class="trow1" width="20%" valign="top">
 	<div class="wiki_navi">
 		<div class="wiki_nav_cat thead">{$lang->forenwiki_nav}</div>
+		<div class="wiki_entry"><a href="misc.php?action=forenwiki">{$lang->forenwiki_main}</a></div>
 		{$wiki_addentry}
 		{$wiki_cat}
 </div>
