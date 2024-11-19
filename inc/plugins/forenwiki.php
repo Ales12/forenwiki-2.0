@@ -52,7 +52,7 @@ function forenwiki_install()
     global $db, $mybb, $cache;
 
     //Datenbank
-    if ($db->engine == 'mysql' || $db->engine == 'mysqli') {
+
         $db->query("CREATE TABLE `" . TABLE_PREFIX . "wiki_categories` (
           `cid` int(10) NOT NULL auto_increment,
            `sort` int(10) NOT NULL ,
@@ -72,7 +72,7 @@ function forenwiki_install()
                  `accepted` int(10) DEFAULT '0' NOT NULL,
           PRIMARY KEY (`wid`)
         ) ENGINE=MyISAM" . $db->build_create_table_collation());
-    }
+    
 
     // Spalte bei Usertabelle hinzufügen
     $db->add_column("usergroups", "canaddwikipage", "tinyint NOT NULL default '0'");
@@ -693,7 +693,7 @@ function forenwiki_deactivate()
 function forenwiki_usergroup_permission()
 {
     global $mybb, $lang, $form, $form_container, $run_module;
-    
+
     $lang->misc = (isset($lang->misc) ? $lang->misc : false);
 
     if ($run_module == 'user' && !empty($form_container->_title) & !empty($lang->misc) & $form_container->_title == $lang->misc) {
@@ -1497,8 +1497,9 @@ function forenwiki_misc()
     // Unsere Wikieinträge
 
     // Erstmal eine neue "main" Seite erstellen
-    $wikientry = $mybb->input['wikientry'];
-    if ($wikientry) {
+
+    if (isset($mybb->input['wikientry'])) {
+        $wikientry = $mybb->input['wikientry'];
         // wir holen uns mal die Infos
         $wid = 0;
         $wikititle = "";
@@ -1609,7 +1610,7 @@ function forenwiki_misc()
             "-1" => $lang->forenwiki_denyownentries,
             "1" => $lang->forenwiki_acceptownentries
         );
-
+        $statusentry = "";
         foreach ($all_status as $status => $entrystatus) {
 
             $get_allentries = $db->query("SELECT *
@@ -1757,6 +1758,7 @@ function forenwiki_modcp_nav()
 {
     global $nav_forenwiki, $templates, $lang;
     $lang->load('forenwiki');
+
     eval ("\$nav_forenwiki = \"" . $templates->get("forenwiki_modcp_nav") . "\";");
 }
 
@@ -1791,6 +1793,7 @@ function forenwiki_modcp()
         where accepted = '0'
         ");
 
+        $modcp_newentry = "";
         while ($row = $db->fetch_array($query)) {
             $wikititle = "";
             $wikicat = "";
@@ -1809,9 +1812,9 @@ function forenwiki_modcp()
             eval ("\$modcp_newentry .= \"" . $templates->get("forenwiki_modcp_entry") . "\";");
         }
 
-        $accept_entry = $mybb->input['accept_entry'];
-        if ($accept_entry) {
 
+        if (isset($mybb->input['accept_entry'])) {
+            $accept_entry = $mybb->input['accept_entry'];
             $infos = $db->fetch_array($db->simple_select("wiki_entries", "*", "wid = '{$accept_entry}'"));
             $uid = $infos['uid'];
             $wikititle = $infos['wikititle'];
@@ -1838,9 +1841,9 @@ function forenwiki_modcp()
         }
 
 
-        $deny_entry = $mybb->input['deny_entry'];
-        if ($deny_entry) {
 
+        if (isset($mybb->input['deny_entry'])) {
+            $deny_entry = $mybb->input['deny_entry'];
             $infos = $db->fetch_array($db->simple_select("wiki_entries", "*", "wid = '{$deny_entry}'"));
             $uid = $infos['uid'];
             $wikititle = $infos['wikititle'];
