@@ -69,5 +69,4 @@ Achte darauf, dass ihr über **Administrator-Berechtigungen** auch jeden Admin d
 	text-align: justify;
 	max-height: 500px;
 	overflow: auto;
-}
-        ```
+} ```
