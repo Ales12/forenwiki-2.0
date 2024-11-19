@@ -693,10 +693,12 @@ function forenwiki_deactivate()
 function forenwiki_usergroup_permission()
 {
     global $mybb, $lang, $form, $form_container, $run_module;
+    
+    $lang->misc = (isset($lang->misc) ? $lang->misc : false);
 
     if ($run_module == 'user' && !empty($form_container->_title) & !empty($lang->misc) & $form_container->_title == $lang->misc) {
         $forenwiki_options = array(
-            $form->generate_check_box('canaddwikipage', 1, "Kann einen neuen Wikieintrag hinzufügen?", array("checked" => $mybb->input['canaddwikipage'])),
+            $form->generate_check_box('canaddwikipage', 1, "Kann einen neuen Wikieintrag hinzufügen?", array("checked" => isset($mybb->input['canaddwikipage']))),
         );
         $form_container->output_row("Einstellung für Forenwikipedia", "", "<div class=\"group_settings_bit\">" . implode("</div><div class=\"group_settings_bit\">", $forenwiki_options) . "</div>");
     }
