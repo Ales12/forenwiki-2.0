@@ -1563,7 +1563,7 @@ function forenwiki_misc()
         }
 
 
-        if ($_POST['submitentry']) {
+        if (isset($_POST['submitentry'])) {
             if ($mybb->usergroup['canmodcp'] == 1) {
                 $accepted = 1;
             } else {
