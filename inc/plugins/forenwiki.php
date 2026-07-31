@@ -53,14 +53,14 @@ function forenwiki_install()
 
     //Datenbank
 
-        $db->query("CREATE TABLE `" . TABLE_PREFIX . "wiki_categories` (
+    $db->query("CREATE TABLE `" . TABLE_PREFIX . "wiki_categories` (
           `cid` int(10) NOT NULL auto_increment,
            `sort` int(10) NOT NULL ,
           `category` varchar(500) CHARACTER SET utf8 NOT NULL,
           PRIMARY KEY (`cid`)
         ) ENGINE=MyISAM" . $db->build_create_table_collation());
 
-        $db->query("CREATE TABLE `" . TABLE_PREFIX . "wiki_entries` (
+    $db->query("CREATE TABLE `" . TABLE_PREFIX . "wiki_entries` (
           `wid` int(10) NOT NULL auto_increment,
           `cid` int(11) NOT NULL,
             `sort` int(10) NOT NULL ,
@@ -72,10 +72,10 @@ function forenwiki_install()
                  `accepted` int(10) DEFAULT '0' NOT NULL,
           PRIMARY KEY (`wid`)
         ) ENGINE=MyISAM" . $db->build_create_table_collation());
-    
+
 
     // Spalte bei Usertabelle hinzufügen
-    $db->add_column("usergroups", "canaddwikipage", "tinyint NOT NULL default '0'");
+    $db->add_column("usergroups", "canaddwikipage", "tinyint NOT NULL default '1'");
     $cache->update_usergroups();
 
     // Einstellungen
@@ -395,7 +395,7 @@ function forenwiki_install()
 
     $insert_array = array(
         'title' => 'forenwiki_nav',
-        'template' => $db->escape_string('<<td class="trow1" width="20%" valign="top">
+        'template' => $db->escape_string('<td class="trow1" width="20%" valign="top">
 	<div class="wiki_navi">
 		<div class="wiki_nav_cat thead">{$lang->forenwiki_nav}</div>
 		<div class="wiki_entry"><a href="misc.php?action=forenwiki">{$lang->forenwiki_main}</a></div>
@@ -1439,6 +1439,7 @@ function forenwiki_misc()
         "allow_videocode" => 0
     );
 
+    echo($mybb->usergroup['canaddwikipage']);
 
     // Bauen wir mal unsere Navigation
     $get_all_cats = $db->simple_select(
@@ -2006,33 +2007,35 @@ function forenwiki_alerts()
 function forenwiki_user_activity($user_activity)
 {
     global $parameters, $user, $db, $side_name;
-    if (my_strpos($user['location'], "misc.php?action=forenwiki") !== false) {
-        $user_activity['activity'] = "forenwiki";
+    if (is_null($user['location']) && is_array($user['location'])) {
+        if (my_strpos($user['location'], "misc.php?action=forenwiki") !== false) {
+            $user_activity['activity'] = "forenwiki";
+        }
+        if (my_strpos($user['location'], "misc.php?action=add_entry") !== false) {
+            $user_activity['activity'] = "add_entry";
+        }
+        if (my_strpos($user['location'], "misc.php?action=own_wikientries") !== false) {
+            $user_activity['activity'] = "own_wikientries";
+        }
     }
-    if (my_strpos($user['location'], "misc.php?action=add_entry") !== false) {
-        $user_activity['activity'] = "add_entry";
-    }
-    if (my_strpos($user['location'], "misc.php?action=own_wikientries") !== false) {
-        $user_activity['activity'] = "own_wikientries";
-    }
+        // Wikieinträge
+        $get_sidename = explode(".php?", $user['location']);
 
-    // Wikieinträge
-    $get_sidename = explode(".php?", $user['location']);
-
-    $split_sn = explode("=", $get_sidename[1]);
+        $split_sn = explode("=", $get_sidename[1]);
 
 
-    if ($split_sn[0] == "wikientry") {
-        $get_link = "wikientry={$split_sn[1]}";
-        $user_activity['activity'] = $get_link;
-    }
+        if ($split_sn[0] == "wikientry") {
+            $get_link = "wikientry={$split_sn[1]}";
+            $user_activity['activity'] = $get_link;
+        }
 
-    $get_entry = explode("&", $split_sn[1]);
-    if ($get_entry[0] == "edit_entry") {
-        $user_activity['activity'] = $get_entry[0];
-    }
+        $get_entry = explode("&", $split_sn[1]);
+        if ($get_entry[0] == "edit_entry") {
+            $user_activity['activity'] = $get_entry[0];
+        }
 
-    return $user_activity;
+        return $user_activity;
+
 }
 
 function forenwiki_location_activity($plugin_array)
